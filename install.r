@@ -1,19 +1,21 @@
-#!/bin/bash
+# Set CRAN repository to Posit Package Manager with pre-built binaries from a specific date
+options(repos = c(CRAN = sprintf("https://packagemanager.posit.co/cran/2025-12-07/bin/linux/noble-%s/%s", R.version["arch"], substr(getRversion(), 1, 3))))
 
-# Get project variables
-source config.env
+# Install required packages from CRAN to user directory
+install.packages(c(
+    "remotes",
+    "data.table",
+    "R.utils",
+    "ggplot2",
+    "ggrepel",
+    "readxl",
+    "here",
+    "rmarkdown",
+    "IRkernel"
+))
 
-# Create necessary directories if they don't exist
-mkdir -p $docsdir
-mkdir -p $resultsdir
-mkdir -p $datadir
+# Install specific version of meffonym package from GitHub
+remotes::install_github("perishky/meffonym@9faface")
 
-# Run all scripts
-cd scripts
-bash download-data.sh $datadir $resultsdir
-Rscript download-pan-cancer-clinical.r $datadir $resultsdir
-Rscript extract-data.r $datadir $resultsdir
-Rscript clean-clinical.r $datadir $resultsdir
-Rscript predict-proteins.r $datadir $resultsdir
-Rscript combine.r $datadir $resultsdir
-Rscript analysis.r $datadir $resultsdir
+# Register R kernel with Jupyter
+IRkernel::installspec(name = "rhds_r", displayname = "R (rhds)")
