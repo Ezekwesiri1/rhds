@@ -2,3 +2,8 @@
 *.tar.gz
 *.xlsx
 config.env
+/.quarto/
+**/*.quarto_ipynb
+/.vscode/
+/analysis_cache/
+/analysis_files/
